@@ -26,6 +26,9 @@ std::set<std::string> wordle(
         //Afterwards, look at the given floating characters, look through set to find words that has the following characters in the word and put into a set   
     //Return set of words.
 
+    int word_Size = in.size() - 1; //gets word size.
+
+
 }
 
 // Define any helper functions here
