@@ -1,8 +1,6 @@
 #ifndef RECCHECK
-// For debugging
 #include <iostream>
-// For std::remove
-#include <algorithm> 
+#include <algorithm>
 #include <map>
 #include <set>
 #endif
@@ -11,24 +9,70 @@
 #include "dict-eng.h"
 using namespace std;
 
+// Helper prototype
+void recurseWordle(
+    std::string current,
+    const std::string& floating,
+    const std::set<std::string>& dict,
+    std::set<std::string>& results,
+    size_t index
+);
 
-// Add prototypes of helper functions here
-
-
-// Definition of primary wordle function
 std::set<std::string> wordle(
     const std::string& in,
     const std::string& floating,
     const std::set<std::string>& dict)
 {
-    // Add your code here
-    //Check for any correct placed characters - if found, create a set and look for words with the correct character in that specific position
-        //Afterwards, look at the given floating characters, look through set to find words that has the following characters in the word and put into a set   
-    //Return set of words.
-
-    int word_Size = in.size() - 1; //gets word size.
-
-
+    std::set<std::string> results;
+    std::string current = in;
+    recurseWordle(current, floating, dict, results, 0);
+    return results;
 }
 
-// Define any helper functions here
+// Helper function
+void recurseWordle(
+    std::string current,
+    const std::string& floating,
+    const std::set<std::string>& dict,
+    std::set<std::string>& results,
+    size_t index)
+{
+    if (index == current.size()) {
+        if (dict.find(current) != dict.end()) {
+            // Check if all floating letters were used
+            std::map<char, int> countFloating;
+            for (char c : floating) countFloating[c]++;
+            for (char c : current) {
+                if (countFloating.find(c) != countFloating.end()) {
+                    countFloating[c]--;
+                    if (countFloating[c] == 0) {
+                        countFloating.erase(c);
+                    }
+                }
+            }
+            if (countFloating.empty()) {
+                results.insert(current);
+            }
+        }
+        return;
+    }
+
+    if (current[index] != '-') {
+        // Already filled, move to next index
+        recurseWordle(current, floating, dict, results, index + 1);
+        return;
+    }
+
+    // Try all letters a-z in this position
+    for (char c = 'a'; c <= 'z'; ++c) {
+        current[index] = c;
+        std::string updatedFloating = floating;
+        size_t pos = updatedFloating.find(c);
+        if (pos != std::string::npos) {
+            updatedFloating.erase(pos, 1); // consume floating letter
+        }
+        recurseWordle(current, updatedFloating, dict, results, index + 1);
+    }
+
+    current[index] = '-'; // backtrack (not necessary with string copy, but for clarity)
+}
