@@ -20,7 +20,7 @@ bool scheduleHelper(
     size_t dailyNeed,
     size_t maxShifts,
     DailySchedule& sched,
-    std::vector<size_t>& shiftCounts,
+    vector<size_t>& shiftCounts,
     size_t day,
     size_t slot
 );
@@ -42,10 +42,10 @@ bool schedule(
 
     // Initialize the schedule with INVALID_ID
     sched.clear();
-    sched = DailySchedule(n, std::vector<Worker_T>(dailyNeed, INVALID_ID));
+    sched = DailySchedule(n, vector<Worker_T>(dailyNeed, INVALID_ID));
 
     // Initialize shift counts for each worker
-    std::vector<size_t> shiftCounts(k, 0);
+    vector<size_t> shiftCounts(k, 0);
 
     // Start recursive backtracking
     return scheduleHelper(avail, dailyNeed, maxShifts, sched, shiftCounts, 0, 0);
@@ -57,7 +57,7 @@ bool scheduleHelper(
     size_t dailyNeed,
     size_t maxShifts,
     DailySchedule& sched,
-    std::vector<size_t>& shiftCounts,
+    vector<size_t>& shiftCounts,
     size_t day,
     size_t slot
 )
